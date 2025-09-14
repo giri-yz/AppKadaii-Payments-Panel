@@ -15,11 +15,16 @@ import {
 } from "@/components/ui/form";
 import { Project } from "@/lib/types";
 
-// Define schema with the user's suggested fix
+// Define schema with a more robust pre-processing step for the number input.
 const formSchema = z.object({
   name: z.string().min(1, "Project name is required."),
   description: z.string().optional(),
-  totalAmount: z.coerce.number({invalid_type_error: "Amount must be a number."}).positive("Must be a positive number.").optional().or(z.literal(undefined)),
+  totalAmount: z.preprocess(
+    (val) => (val === "" ? undefined : Number(val)),
+    z.number({ invalid_type_error: "Amount must be a number." })
+      .positive("Must be a positive number.")
+      .optional()
+  ),
 });
 
 // Infer type from schema
@@ -45,7 +50,6 @@ export function ProjectForm({
     },
   });
 
-  // Use an explicit handler to match user's suggestion
   const handleSubmit: SubmitHandler<ProjectFormValues> = (values) => {
     onSubmit(values);
   };
@@ -91,7 +95,7 @@ export function ProjectForm({
             <FormItem>
               <FormLabel>Total Project Amount (Goal)</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="e.g., 5000" {...field} value={field.value ?? ""} />
+                <Input type="number" placeholder="e.g., 5000" {...field} value={field.value ?? ""} onChange={(e) => field.onChange(e.target.value === '' ? undefined : e.target.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
