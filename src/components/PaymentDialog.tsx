@@ -29,7 +29,7 @@ type PaymentFormValues = z.infer<typeof z.object({
     status: z.enum(['Pending', 'Completed']),
     method: z.string().min(1, 'Payment method is required.'),
     description: z.string().optional(),
-})>;
+}),>;
 
 export function PaymentDialog({ projectId, payment, children }: PaymentDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
