@@ -9,19 +9,20 @@ import * as z from 'zod';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-const formSchema = z.object({
-  name: z.string().min(1, 'Project name is required.'),
-  description: z.string().optional(),
-  totalAmount: z.coerce.number().positive('Must be a positive number').optional(),
-});
-
+// This type can be inferred in the component, so the schema definition here is redundant.
+// We will define the type inline in the function.
+type NewProjectValues = {
+    name: string;
+    description?: string;
+    totalAmount?: number;
+}
 
 function NewProjectPage() {
   const router = useRouter();
   const { addProject } = useProjects();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleSubmit = (values: NewProjectValues) => {
     setIsSubmitting(true);
     try {
       addProject({

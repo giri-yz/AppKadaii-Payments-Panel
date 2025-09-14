@@ -13,15 +13,13 @@ import { Calendar } from './ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { useEffect } from 'react';
-
-// We need to add Popover and Calendar to the project via shadcn
-// npx shadcn-ui@latest add popover calendar select
 
 const formSchema = z.object({
   type: z.enum(['income', 'expense']),
   name: z.string().min(1, 'Name is required.'),
-  amount: z.coerce.number().positive('Amount must be positive.'),
+  // By coercing to number first, we ensure the type is correct for the subsequent checks.
+  // The refine step handles cases where the input might be empty or non-numeric, which coerce would turn into 0 or NaN.
+  amount: z.coerce.number({invalid_type_error: "Amount must be a number."}).positive("Amount must be a positive number."),
   date: z.date(),
   status: z.enum(['Pending', 'Completed']),
   method: z.string().min(1, 'Payment method is required.'),
@@ -48,7 +46,6 @@ export function PaymentForm({ payment, onSubmit, isSubmitting }: PaymentFormProp
     },
   });
 
-  // When the type changes, we might want to change the name label
   const type = form.watch('type');
 
   return (

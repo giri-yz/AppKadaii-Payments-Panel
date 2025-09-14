@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
         JSON.parse(decryptedData);
         return true; // If it parses, password is correct
-    } catch (e) {
+    } catch {
         return false; // If JSON.parse fails, password is wrong
     }
   };

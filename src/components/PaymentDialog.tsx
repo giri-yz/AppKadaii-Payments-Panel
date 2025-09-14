@@ -4,7 +4,6 @@ import { useState } from 'react';
 import * as z from 'zod';
 import { useProjects } from '@/hooks/useProjects';
 import { Payment } from '@/lib/types';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -22,22 +21,22 @@ interface PaymentDialogProps {
   children: React.ReactNode; // The trigger button
 }
 
-const formSchema = z.object({
+type PaymentFormValues = z.infer<typeof z.object({
     type: z.enum(['income', 'expense']),
     name: z.string().min(1, 'Name is required.'),
-    amount: z.coerce.number().positive('Amount must be positive.'),
+    amount: z.number().positive(),
     date: z.date(),
     status: z.enum(['Pending', 'Completed']),
     method: z.string().min(1, 'Payment method is required.'),
     description: z.string().optional(),
-});
+})>;
 
 export function PaymentDialog({ projectId, payment, children }: PaymentDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addPaymentToProject, updatePaymentInProject } = useProjects();
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleSubmit = (values: PaymentFormValues) => {
     setIsSubmitting(true);
     try {
       const paymentData = {

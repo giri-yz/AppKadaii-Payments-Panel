@@ -11,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
   DialogDescription,
 } from '@/components/ui/dialog';
 import { ProjectForm } from './ProjectForm';
@@ -21,18 +20,19 @@ interface EditProjectDialogProps {
   project: Project;
 }
 
-const formSchema = z.object({
+type ProjectFormValues = z.infer<typeof z.object({
     name: z.string().min(1, 'Project name is required.'),
     description: z.string().optional(),
-    totalAmount: z.coerce.number().positive('Must be a positive number').optional(),
-});
+    totalAmount: z.number().positive().optional(),
+})>;
+
 
 export function EditProjectDialog({ project }: EditProjectDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { updateProject } = useProjects();
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleSubmit = (values: ProjectFormValues) => {
     setIsSubmitting(true);
     try {
       updateProject({
