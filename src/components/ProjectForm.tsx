@@ -15,16 +15,23 @@ import {
 } from "@/components/ui/form";
 import { Project } from "@/lib/types";
 
-// Define schema with a more robust pre-processing step for the number input.
+// Use a transform to handle number conversion and validation robustly.
 const formSchema = z.object({
   name: z.string().min(1, "Project name is required."),
   description: z.string().optional(),
-  totalAmount: z.preprocess(
-    (val) => (val === "" ? undefined : Number(val)),
-    z.number({ invalid_type_error: "Amount must be a number." })
-      .positive("Must be a positive number.")
-      .optional()
-  ),
+  totalAmount: z.string()
+    .optional()
+    .refine((val) => val === "" || val === undefined || !isNaN(Number(val)), {
+      message: "Must be a valid number.",
+    })
+    .transform((val) => {
+        if (val === "" || val === undefined) return undefined;
+        const num = Number(val);
+        return isNaN(num) ? undefined : num;
+    })
+    .refine((val) => val === undefined || val > 0, {
+        message: "Must be a positive number."
+    })
 });
 
 // Infer type from schema
@@ -46,7 +53,8 @@ export function ProjectForm({
     defaultValues: {
       name: project?.name ?? "",
       description: project?.description ?? "",
-      totalAmount: project?.totalAmount ?? undefined,
+      // The form now deals with a string representation for totalAmount
+      totalAmount: project?.totalAmount?.toString() ?? "",
     },
   });
 
@@ -95,7 +103,13 @@ export function ProjectForm({
             <FormItem>
               <FormLabel>Total Project Amount (Goal)</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="e.g., 5000" {...field} value={field.value ?? ""} onChange={(e) => field.onChange(e.target.value === '' ? undefined : e.target.value)} />
+                <Input
+                  type="text" // Use text to avoid browser number input quirks
+                  inputMode="decimal" // Hint for mobile keyboards
+                  placeholder="e.g., 5000"
+                  {...field}
+                  value={field.value ?? ""}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
