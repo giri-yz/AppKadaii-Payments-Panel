@@ -1,24 +1,50 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## AppKadaii Payments Panel
+
+This is a client-side, offline-first Progressive Web App (PWA) for tracking project-based income and expenses. All data is stored locally on your device.
+
 ## Getting Started
 
-First, run the development server:
+Follow these instructions to get the project running on your local machine.
+
+### 1. Install Dependencies
+
+First, you must install the necessary dependencies. Navigate to the project directory in your terminal and run:
+
+```bash
+npm install
+```
+
+### 2. Run the Development Server
+
+Once the installation is complete, you can run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application. The page will auto-update as you edit the files.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Build for Production (Static PWA)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This application is designed to be a static Progressive Web App that works offline. To create the production-ready version, run the following command:
+
+```bash
+npm run build
+```
+
+This command will generate a static version of the application in the `out` directory.
+
+### 4. Run the Production App
+
+The contents of the `out` folder are the complete application. You can serve these files with any static server. For example, you can use the `serve` package:
+
+```bash
+npx serve out
+```
+
+After running this, you can access the production application at the URL provided by the `serve` command. Once loaded, the app will work offline.
 
 ## Learn More
 
