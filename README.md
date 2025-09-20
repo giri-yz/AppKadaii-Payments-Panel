@@ -46,6 +46,38 @@ npx serve out
 
 After running this, you can access the production application at the URL provided by the `serve` command. Once loaded, the app will work offline.
 
+## Deployment to Google Cloud
+
+This project includes an automated script (`deploy.sh`) to deploy the static PWA to a Google Cloud Storage bucket.
+
+### Prerequisites
+
+1.  A Google Cloud Platform (GCP) account.
+2.  The [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) (`gcloud` CLI) installed and authenticated on your local machine. You can authenticate by running `gcloud auth login`.
+
+### Step 1: Create a GCS Bucket
+
+You need a globally unique Google Cloud Storage bucket to host your application. You can create one via the GCP Console or with the `gcloud` CLI:
+
+```bash
+# Replace 'your-unique-bucket-name' with a globally unique name
+gcloud storage buckets create gs://your-unique-bucket-name --public-access-prevention
+```
+
+### Step 2: Configure the Deployment Script
+
+Open the `deploy.sh` file in the root of this project and replace the placeholder `YOUR_BUCKET_NAME_HERE` with the name of the bucket you just created.
+
+### Step 3: Run the Deployment Script
+
+Make sure the script is executable (it should be by default). Then, run it from your terminal:
+
+```bash
+./deploy.sh
+```
+
+The script will build the application, upload the files to your GCS bucket, and set the correct public permissions. You can then access your deployed application at `https://storage.googleapis.com/your-unique-bucket-name/index.html`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -54,9 +86,3 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
